@@ -3,13 +3,13 @@
 %define		plugin	check_raid
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	2.1.1.113
+Version:	2.2
 Release:	1
 License:	GPL v2
 Group:		Networking
-Source0:	%{plugin}
-Source1:	%{plugin}.cfg
-URL:		http://exchange.nagios.org/directory/Plugins/Hardware/Storage-Systems/RAID-Controllers/check_raid/details
+Source0:	https://github.com/glensc/nagios-plugin-check_raid/tarball/%{version}/%{plugin}-%{version}.tgz
+# Source0-md5:	c61be3cee6f55da40610dc0dc8bdb7ed
+URL:		https://github.com/glensc/nagios-plugin-check_raid
 Requires:	nagios-common
 Requires:	perl-base >= 1:5.8.0
 Requires:	sudo
@@ -54,17 +54,14 @@ Supports:
 - Solaris software RAID via metastat
 
 %prep
-%setup -qcT
-cp -p %{SOURCE0} %{plugin}
-
-rev=$(awk '/Id: check_raid/{print $4}' check_raid)
-test %{version} = 2.1.$rev
+%setup -qc
+mv *-nagios-plugin-check_raid-*/* .
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir}}
-install -p %{plugin} $RPM_BUILD_ROOT%{plugindir}/%{plugin}
-cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{plugin}.cfg
+install -p %{plugin}.pl $RPM_BUILD_ROOT%{plugindir}/%{plugin}
+cp -p %{plugin}.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{plugin}.cfg
 
 %clean
 rm -rf $RPM_BUILD_ROOT
