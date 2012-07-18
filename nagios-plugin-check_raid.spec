@@ -3,18 +3,19 @@
 %define		plugin	check_raid
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	2.2
+Version:	2.2.50
 Release:	1
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/tarball/%{version}/%{plugin}-%{version}.tgz
-# Source0-md5:	c61be3cee6f55da40610dc0dc8bdb7ed
+# Source0-md5:	7512ae0de0e62681f8b62550555c6429
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 Requires:	nagios-common
 Requires:	perl-base >= 1:5.8.0
 Requires:	sudo
 Suggests:	CmdTool2
 Suggests:	arcconf
+Suggests:	areca-cli
 Suggests:	cciss_vol_status
 Suggests:	hpacucli
 Suggests:	megacli-sas
@@ -33,23 +34,25 @@ This plugin chekcs Check all RAID volumes (hardware and software) that
 can be identified.
 
 Supports:
-- Adaptec AAC RAID via aaccli or afacli or arcconf
 - AIX software RAID via lsvg
-- HP/Compaq Smart Array via cciss_vol_status (hpsa supported too)
+- Adaptec AAC RAID via aaccli or afacli or arcconf
+- Areca SATA RAID Support
+- HP Smart Array (MSA1500) via serial line
 - HP Smart Array Controllers and MSA Controllers via hpacucli (see
   hapacucli readme)
-- HP Smart Array (MSA1500) via serial line
+- HP/Compaq Smart Array via cciss_vol_status (hpsa supported too)
+- LSI Logic MegaRAID SAS series via MegaCli
+- LSI MegaRaid via lsraid
 - Linux 3ware SATA RAID via tw_cli
 - Linux DPT/I2O hardware RAID controllers via /proc/scsi/dpt_i2o
 - Linux GDTH hardware RAID controllers via /proc/scsi/gdth
+- Linux LSI MegaRaid hardware RAID via /proc/megaraid
 - Linux LSI MegaRaid hardware RAID via CmdTool2
 - Linux LSI MegaRaid hardware RAID via megarc
-- Linux LSI MegaRaid hardware RAID via /proc/megaraid
-- Linux MegaIDE hardware RAID controllers via /proc/megaide
 - Linux MPT hardware RAID via mpt-status
+- Linux MegaIDE hardware RAID controllers via /proc/megaide
 - Linux software RAID (md) via /proc/mdstat
-- LSI Logic MegaRAID SAS series via MegaCli
-- LSI MegaRaid via lsraid
+- SAS2IRCU support
 - Serveraid IPS via ipssend
 - Solaris software RAID via metastat
 
