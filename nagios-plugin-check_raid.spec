@@ -4,7 +4,7 @@
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
 Version:	2.2.50
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/tarball/%{version}/%{plugin}-%{version}.tgz
@@ -24,7 +24,6 @@ Suggests:	hpacucli
 Suggests:	megacli-sas
 Suggests:	megarc-scsi
 Suggests:	mpt-status
-Suggests:	nagios-nrpe
 Suggests:	smartmontools
 Suggests:	tw_cli-9xxx
 BuildArch:	noarch
