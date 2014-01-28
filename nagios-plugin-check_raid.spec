@@ -4,14 +4,17 @@
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
 Version:	2.2.50
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/tarball/%{version}/%{plugin}-%{version}.tgz
 # Source0-md5:	7512ae0de0e62681f8b62550555c6429
 URL:		https://github.com/glensc/nagios-plugin-check_raid
+BuildRequires:	rpmbuild(macros) >= 1.685
+Requires:	grep
 Requires:	nagios-common
 Requires:	perl-base >= 1:5.8.0
+Requires:	sed >= 4.0
 Requires:	sudo
 Suggests:	CmdTool2
 Suggests:	arcconf
@@ -21,12 +24,14 @@ Suggests:	hpacucli
 Suggests:	megacli-sas
 Suggests:	megarc-scsi
 Suggests:	mpt-status
+Suggests:	nagios-nrpe
 Suggests:	smartmontools
 Suggests:	tw_cli-9xxx
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/nagios/plugins
+%define		nrpeddir	/etc/nagios/nrpe.d
 %define		plugindir	%{_prefix}/lib/nagios/plugins
 
 %description
@@ -62,9 +67,10 @@ mv *-nagios-plugin-check_raid-*/* .
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{nrpeddir},%{plugindir}}
 install -p %{plugin}.pl $RPM_BUILD_ROOT%{plugindir}/%{plugin}
 cp -p %{plugin}.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{plugin}.cfg
+touch $RPM_BUILD_ROOT%{nrpeddir}/%{plugin}.cfg
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -81,7 +87,14 @@ if [ "$1" = 0 ]; then
 	%{__sed} -i -e '/CHECK_RAID/d' /etc/sudoers
 fi
 
+%triggerin -- nagios-nrpe
+%nagios_nrpe -a %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+
+%triggerun -- nagios-nrpe
+%nagios_nrpe -d %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+
 %files
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}.cfg
 %attr(755,root,root) %{plugindir}/%{plugin}
+%ghost %{nrpeddir}/%{plugin}.cfg
