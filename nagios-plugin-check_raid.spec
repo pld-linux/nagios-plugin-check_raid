@@ -3,12 +3,12 @@
 %define		plugin	check_raid
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	2.2.50
-Release:	3
+Version:	3.1.0
+Release:	1
 License:	GPL v2
 Group:		Networking
-Source0:	https://github.com/glensc/nagios-plugin-check_raid/tarball/%{version}/%{plugin}-%{version}.tgz
-# Source0-md5:	7512ae0de0e62681f8b62550555c6429
+Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{plugin}-%{version}.tar.gz
+# Source0-md5:	51e1bdabc9642b68a53ac2ca5b9961c4
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	rpmbuild(macros) >= 1.685
 Requires:	grep
@@ -61,8 +61,11 @@ Supports:
 - Solaris software RAID via metastat
 
 %prep
-%setup -qc
-mv *-nagios-plugin-check_raid-*/* .
+%setup -q
+
+%build
+ver=$(./%{plugin}.pl -V)
+test "$(echo "$ver" | awk '{print $NF}')" = %{version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
