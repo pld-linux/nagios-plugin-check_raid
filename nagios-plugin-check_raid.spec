@@ -3,29 +3,32 @@
 %define		plugin	check_raid
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	3.1.0
+Version:	3.2.0
 Release:	1
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{plugin}-%{version}.tar.gz
-# Source0-md5:	51e1bdabc9642b68a53ac2ca5b9961c4
+# Source0-md5:	25065085989e35f99c796079f36fe89c
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	rpmbuild(macros) >= 1.685
 Requires:	grep
 Requires:	nagios-common
 Requires:	perl-base >= 1:5.8.0
 Requires:	sed >= 4.0
-Requires:	sudo
+Requires:	sudo >= 1:1.8.7-2
 Suggests:	CmdTool2
 Suggests:	arcconf
 Suggests:	areca-cli
 Suggests:	cciss_vol_status
 Suggests:	hpacucli
+Suggests:	lsscsi
 Suggests:	megacli-sas
 Suggests:	megarc-scsi
 Suggests:	mpt-status
 Suggests:	smartmontools
 Suggests:	tw_cli-9xxx
+# cciss_vol_status 1.10 can process /dev/sdX instead of only /dev/sgX
+Conflicts:	cciss_vol_status < 1.10
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -61,7 +64,8 @@ Supports:
 - Solaris software RAID via metastat
 
 %prep
-%setup -q
+%setup -qc
+mv nagios-plugin-check_raid-*/* .
 
 %build
 ver=$(./%{plugin}.pl -V)
@@ -78,7 +82,12 @@ touch $RPM_BUILD_ROOT%{nrpeddir}/%{plugin}.cfg
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ "$1" = 1 ]; then
+# setup sudo rules:
+# - on first install
+# - if separate config file is used
+grep -q '^#includedir /etc/sudoers\.d' /etc/sudoers && confd=1
+
+if [ "$1" = 1 -o "$confd" = 1 ]; then
 	# setup sudo rules on first install
 	%{plugindir}/%{plugin} -S || :
 fi
@@ -86,6 +95,16 @@ fi
 %postun
 if [ "$1" = 0 ]; then
 	# remove all sudo rules related to us
+	%{__sed} -i -e '/CHECK_RAID/d' /etc/sudoers
+fi
+
+%triggerpostun -- %{name} < 3.1.1-0.2, sudo < 1:1.8.7-2
+if grep -q '^#includedir /etc/sudoers\.d' /etc/sudoers; then
+	# setup sudo rules on first install
+	%{plugindir}/%{plugin} -S || :
+fi
+# remove CHECK_RAID rules from /etc/sudoers if separate config is in place
+if [ -e /etc/sudoers.d/check_raid ]; then
 	%{__sed} -i -e '/CHECK_RAID/d' /etc/sudoers
 fi
 
