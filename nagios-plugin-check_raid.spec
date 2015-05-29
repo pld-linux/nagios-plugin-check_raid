@@ -4,7 +4,7 @@
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
 Version:	3.2.3
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
@@ -29,6 +29,7 @@ Suggests:	smartmontools
 Suggests:	tw_cli-9xxx
 # cciss_vol_status 1.10 can process /dev/sdX instead of only /dev/sgX
 Conflicts:	cciss_vol_status < 1.10
+Conflicts:	nagios-nrpe < 2.15-5
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
