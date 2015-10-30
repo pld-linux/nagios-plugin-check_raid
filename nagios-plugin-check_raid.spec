@@ -9,7 +9,7 @@ Release:	1
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	05c61d398ebf2211d0275e76c33906df
+# Source0-md5:	07dcf59f6cacc929766b6d29cdb32ca4
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-Monitoring-Plugin >= 0.37
 BuildRequires:	rpm-perlprov >= 4.1-13
