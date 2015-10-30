@@ -1,15 +1,18 @@
 # TODO
 # - see and adopt: http://gist.github.com/359890
 %define		plugin	check_raid
+%include	/usr/lib/rpm/macros.perl
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	3.2.5
+Version:	4.0.0
 Release:	1
 License:	GPL v2
 Group:		Networking
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	b7eaa179090cbb8ed14e9163f6c0c8f3
+# Source0-md5:	05c61d398ebf2211d0275e76c33906df
 URL:		https://github.com/glensc/nagios-plugin-check_raid
+BuildRequires:	perl-Monitoring-Plugin >= 0.37
+BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	rpmbuild(macros) >= 1.685
 Requires:	grep
 Requires:	nagios-common
@@ -70,15 +73,31 @@ Supports:
 mv nagios-plugin-check_raid-*/* .
 
 %build
-ver=$(./%{plugin}.pl -V)
+# version check exits with "3", here's explanation:
+# https://github.com/monitoring-plugins/monitoring-plugins/pull/1363
+ver=$(./%{plugin}.sh -V || :)
 test "$(echo "$ver" | awk '{print $NF}')" = %{version}
+
+%{__perl} Makefile.PL \
+	INSTALLVENDORSCRIPT=%{plugindir} \
+	INSTALLDIRS=vendor
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{nrpeddir},%{plugindir}}
-install -p %{plugin}.pl $RPM_BUILD_ROOT%{plugindir}/%{plugin}
-cp -p %{plugin}.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{plugin}.cfg
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
+
+cp -p %{plugin}.cfg $RPM_BUILD_ROOT%{_sysconfdir}
 touch $RPM_BUILD_ROOT%{nrpeddir}/%{plugin}.cfg
+
+# no .ext
+mv $RPM_BUILD_ROOT%{plugindir}/%{plugin}{.pl,}
+
+# cleanup
+%{__rm} $RPM_BUILD_ROOT%{perl_archlib}/perllocal.pod
+%{__rm} $RPM_BUILD_ROOT%{perl_vendorarch}/auto/App/Monitoring/Plugin/CheckRaid/.packlist
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -121,3 +140,7 @@ fi
 %attr(640,root,nagios) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}.cfg
 %attr(755,root,root) %{plugindir}/%{plugin}
 %ghost %{nrpeddir}/%{plugin}.cfg
+%dir %{perl_vendorlib}/App/Monitoring
+%dir %{perl_vendorlib}/App/Monitoring/Plugin
+%{perl_vendorlib}/App/Monitoring/Plugin/CheckRaid.pm
+%{perl_vendorlib}/App/Monitoring/Plugin/CheckRaid
