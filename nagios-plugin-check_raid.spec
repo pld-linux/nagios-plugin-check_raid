@@ -12,7 +12,7 @@ Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%
 # Source0-md5:	07dcf59f6cacc929766b6d29cdb32ca4
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-ExtUtils-MakeMaker-CPANfile
-BuildRequires:	perl-Module-Pluggable
+BuildRequires:	perl-Module-Pluggable >= 5.1
 BuildRequires:	perl-Monitoring-Plugin >= 0.37
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	rpmbuild(macros) >= 1.685
