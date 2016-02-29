@@ -9,7 +9,7 @@ Release:	1
 License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	634e41411c599da7bc1960e375f79d14
+# Source0-md5:	f8ef0af7bbc15e8dcb65301648fc967f
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-ExtUtils-MakeMaker-CPANfile
 BuildRequires:	perl-Module-Pluggable >= 5.1
