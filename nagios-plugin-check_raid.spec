@@ -87,14 +87,15 @@ test "$(echo "$ver" | awk '{print $NF}')" = %{version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{nrpeddir},%{plugindir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{nrpeddir},%{plugindir},/etc/sudoers.d}
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -p %{plugin}.cfg $RPM_BUILD_ROOT%{_sysconfdir}
 touch $RPM_BUILD_ROOT%{nrpeddir}/%{plugin}.cfg
+touch $RPM_BUILD_ROOT/etc/sudoers.d/check_raid
 
-# no .ext
+# remove .pl extension
 mv $RPM_BUILD_ROOT%{plugindir}/%{plugin}{.pl,}
 
 # cleanup
@@ -111,7 +112,6 @@ rm -rf $RPM_BUILD_ROOT
 grep -q '^#includedir /etc/sudoers\.d' /etc/sudoers && confd=1
 
 if [ "$1" = 1 -o "$confd" = 1 ]; then
-	# setup sudo rules on first install
 	%{plugindir}/%{plugin} -S || :
 fi
 
@@ -123,7 +123,6 @@ fi
 
 %triggerpostun -- %{name} < 3.1.1-0.2, sudo < 1:1.8.7-2
 if grep -q '^#includedir /etc/sudoers\.d' /etc/sudoers; then
-	# setup sudo rules on first install
 	%{plugindir}/%{plugin} -S || :
 fi
 # remove CHECK_RAID rules from /etc/sudoers if separate config is in place
@@ -142,6 +141,7 @@ fi
 %attr(640,root,nagios) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}.cfg
 %attr(755,root,root) %{plugindir}/%{plugin}
 %ghost %{nrpeddir}/%{plugin}.cfg
+%ghost /etc/sudoers.d/check_raid
 %dir %{perl_vendorlib}/App/Monitoring
 %dir %{perl_vendorlib}/App/Monitoring/Plugin
 %{perl_vendorlib}/App/Monitoring/Plugin/CheckRaid.pm
