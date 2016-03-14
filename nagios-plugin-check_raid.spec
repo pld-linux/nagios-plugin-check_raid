@@ -81,6 +81,7 @@ mv nagios-plugin-check_raid-*/* .
 ver=$(./%{plugin}.sh -V || :)
 test "$(echo "$ver" | awk '{print $NF}')" = %{version}
 
+LC_ALL=en_US.utf8 \
 %{__perl} Makefile.PL \
 	INSTALLVENDORSCRIPT=%{plugindir} \
 	INSTALLDIRS=vendor
