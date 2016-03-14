@@ -4,12 +4,12 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	4.0.1
+Version:	4.0.2
 Release:	1
 License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f8ef0af7bbc15e8dcb65301648fc967f
+# Source0-md5:	6ba2d76442ed9b529efa09e14d70382c
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-ExtUtils-MakeMaker-CPANfile
 BuildRequires:	perl-Module-Pluggable >= 5.1
@@ -64,6 +64,7 @@ Supports:
 - Linux LSI MegaRaid hardware RAID via CmdTool2
 - Linux LSI MegaRaid hardware RAID via megarc
 - Linux MPT hardware RAID via mpt-status
+- Linux Device Mapper
 - Linux MegaIDE hardware RAID controllers via /proc/megaide
 - Linux software RAID (md) via /proc/mdstat
 - SAS2IRCU support
