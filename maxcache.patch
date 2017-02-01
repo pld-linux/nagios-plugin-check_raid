@@ -1,0 +1,11 @@
+--- a/lib/App/Monitoring/Plugin/CheckRaid/Plugins/arcconf.pm.org	2016-12-26 21:40:17.000000000 +0100
++++ b/lib/App/Monitoring/Plugin/CheckRaid/Plugins/arcconf.pm	2017-02-01 12:15:26.041797097 +0100
+@@ -255,7 +255,7 @@ sub parse_ctrl_config {
+ 				}
+ 			}
+ 
+-		} elsif ($section eq 'MaxCache 3.0 information') {
++		} elsif (lc $section eq 'maxcache 3.0 information') {
+ 			# not parsed yet
+ 		} elsif ($section eq 'Connector information') {
+ 			# not parsed yet

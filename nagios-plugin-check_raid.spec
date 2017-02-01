@@ -10,6 +10,7 @@ License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	75ad1f75d22ae33996bfb16103c59328
+Patch0:		maxcache.patch
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-ExtUtils-MakeMaker-CPANfile
 BuildRequires:	perl-Module-Pluggable >= 5.1
@@ -74,6 +75,7 @@ Supports:
 %prep
 %setup -qc
 mv nagios-plugin-check_raid-*/* .
+%patch0 -p1
 
 %build
 # version check exits with "3", here's explanation:
