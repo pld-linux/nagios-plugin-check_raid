@@ -115,12 +115,12 @@ rm -rf $RPM_BUILD_ROOT
 # - if separate config file is used
 grep -q '^#includedir /etc/sudoers\.d' /etc/sudoers && confd=1
 
-if [ "$1" = 1 -o "$confd" = 1 ]; then
+if [ "$1" = 1 ] || [ "$1" = "configure" ] || [ "$confd" = 1 ]; then
 	%{plugindir}/%{plugin} -S || :
 fi
 
 %postun
-if [ "$1" = 0 ]; then
+if [ "$1" = "0" ] || [ "$1" = "remove" ]; then
 	# remove all sudo rules related to us
 	%{__sed} -i -e '/CHECK_RAID/d' /etc/sudoers
 fi
