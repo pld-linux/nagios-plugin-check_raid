@@ -4,12 +4,12 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	4.0.6
+Version:	4.0.8
 Release:	1
 License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	72ec3dba022e4c1483828a0610c629a1
+# Source0-md5:	14165253cd734a1c0bf031b18c4e0794
 Patch0:		maxcache.patch
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-ExtUtils-MakeMaker-CPANfile
