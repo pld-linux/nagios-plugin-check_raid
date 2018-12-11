@@ -5,7 +5,7 @@
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
 Version:	4.0.8
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
@@ -98,7 +98,8 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{nrpeddir},%{plugindir},/etc/sudoers.
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -p %{plugin}.cfg $RPM_BUILD_ROOT%{_sysconfdir}
-touch $RPM_BUILD_ROOT%{nrpeddir}/%{plugin}.cfg
+cp -p %{plugin}_bbu.cfg $RPM_BUILD_ROOT%{_sysconfdir}
+touch $RPM_BUILD_ROOT%{nrpeddir}/%{plugin}{,_bbu}.cfg
 touch $RPM_BUILD_ROOT/etc/sudoers.d/check_raid
 
 # remove .pl extension
@@ -138,15 +139,19 @@ fi
 
 %triggerin -- nagios-nrpe
 %nagios_nrpe -a %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+%nagios_nrpe -a %{plugin}_bbu -f %{_sysconfdir}/%{plugin}_bbu.cfg
 
 %triggerun -- nagios-nrpe
 %nagios_nrpe -d %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+%nagios_nrpe -a %{plugin}_bbu -f %{_sysconfdir}/%{plugin}_bbu.cfg
 
 %files
 %defattr(644,root,root,755)
 %attr(640,root,nagios) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}.cfg
+%attr(640,root,nagios) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}_bbu.cfg
 %attr(755,root,root) %{plugindir}/%{plugin}
 %ghost %{nrpeddir}/%{plugin}.cfg
+%ghost %{nrpeddir}/%{plugin}_bbu.cfg
 %ghost /etc/sudoers.d/check_raid
 %dir %{perl_vendorlib}/App/Monitoring
 %dir %{perl_vendorlib}/App/Monitoring/Plugin

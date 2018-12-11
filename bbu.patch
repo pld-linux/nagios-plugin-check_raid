@@ -1,25 +1,15 @@
-diff -urN nagios-plugin-check_raid-4.0.8.org/check_raid.cfg nagios-plugin-check_raid-4.0.8/check_raid.cfg
---- nagios-plugin-check_raid-4.0.8.org/check_raid.cfg	2017-09-01 20:58:44.000000000 +0200
-+++ nagios-plugin-check_raid-4.0.8/check_raid.cfg	2018-12-11 13:11:45.426546079 +0100
-@@ -5,7 +5,13 @@
- 	command_line    /usr/lib/nagios/plugins/check_raid $ARG1$
- }
- 
--# service template
+diff -urN nagios-plugin-check_raid-4.0.8.org/check_raid_bbu.cfg nagios-plugin-check_raid-4.0.8/check_raid_bbu.cfg
+--- nagios-plugin-check_raid-4.0.8.org/check_raid_bbu.cfg	1970-01-01 01:00:00.000000000 +0100
++++ nagios-plugin-check_raid-4.0.8/check_raid_bbu.cfg	2018-12-11 13:49:55.609515941 +0100
+@@ -0,0 +1,34 @@
++# Usage:
 +# check_raid_bbu
 +define command {
 +	command_name    check_raid_bbu
 +	command_line    /usr/lib/nagios/plugins/check_raid --bbu-monitoring $ARG1$
 +}
 +
-+# service templates
- define service {
- 	use                     generic-service
- 	name                    raid
-@@ -19,6 +25,20 @@
- 	check_command           check_raid
- }
- 
++# service template
 +define service {
 +	use                     generic-service
 +	name                    raid-bbu
@@ -33,7 +23,16 @@ diff -urN nagios-plugin-check_raid-4.0.8.org/check_raid.cfg nagios-plugin-check_
 +	check_command           check_raid_bbu
 +}
 +
++# sample check
++#define service {
++#	use                     raid-bbu
++#	host_name               localhost
++#}
 +
- # sample check
- #define service {
- #	use                     raid
++# sample check via nrpe
++#define service {
++#	use                     raid-bbu
++#	hostgroups              linux-servers
++#	host_name               localhost
++#	check_command           check_nrpe!-c check_raid_bbu -t 60
++#}
