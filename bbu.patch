@@ -1,0 +1,39 @@
+diff -urN nagios-plugin-check_raid-4.0.8.org/check_raid.cfg nagios-plugin-check_raid-4.0.8/check_raid.cfg
+--- nagios-plugin-check_raid-4.0.8.org/check_raid.cfg	2017-09-01 20:58:44.000000000 +0200
++++ nagios-plugin-check_raid-4.0.8/check_raid.cfg	2018-12-11 13:11:45.426546079 +0100
+@@ -5,7 +5,13 @@
+ 	command_line    /usr/lib/nagios/plugins/check_raid $ARG1$
+ }
+ 
+-# service template
++# check_raid_bbu
++define command {
++	command_name    check_raid_bbu
++	command_line    /usr/lib/nagios/plugins/check_raid --bbu-monitoring $ARG1$
++}
++
++# service templates
+ define service {
+ 	use                     generic-service
+ 	name                    raid
+@@ -19,6 +25,20 @@
+ 	check_command           check_raid
+ }
+ 
++define service {
++	use                     generic-service
++	name                    raid-bbu
++	service_description     raid-bbu
++	register                0
++
++	normal_check_interval   30
++	retry_check_interval    5
++	notification_interval   3600
++
++	check_command           check_raid_bbu
++}
++
++
+ # sample check
+ #define service {
+ #	use                     raid

@@ -5,12 +5,13 @@
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
 Version:	4.0.8
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	14165253cd734a1c0bf031b18c4e0794
 Patch0:		maxcache.patch
+Patch1:		bbu.patch
 URL:		https://github.com/glensc/nagios-plugin-check_raid
 BuildRequires:	perl-ExtUtils-MakeMaker-CPANfile
 BuildRequires:	perl-Module-Pluggable >= 5.1
@@ -76,6 +77,7 @@ Supports:
 %setup -qc
 mv nagios-plugin-check_raid-*/* .
 %patch0 -p1
+%patch1 -p1
 
 %build
 # version check exits with "3", here's explanation:
