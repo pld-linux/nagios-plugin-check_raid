@@ -4,12 +4,12 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
-Version:	4.0.9
+Version:	4.0.10
 Release:	1
 License:	GPL v2
 Group:		Applications
 Source0:	https://github.com/glensc/nagios-plugin-check_raid/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	8448e9437b63dd5cb2617b4a0bd8511d
+# Source0-md5:	44d42b711ea234f69c1103f731a4c461
 Patch0:		maxcache.patch
 Patch1:		bbu.patch
 URL:		https://github.com/glensc/nagios-plugin-check_raid
@@ -79,11 +79,16 @@ mv nagios-plugin-check_raid-*/* .
 %patch0 -p1
 %patch1 -p1
 
+# set version
+%{__sed} -i -e '
+    s#my $VERSION = q.*;#my $VERSION = q/%{version}-%{release}/;#
+' bin/%{plugin}.pl
+
 %build
 # version check exits with "3", here's explanation:
 # https://github.com/monitoring-plugins/monitoring-plugins/pull/1363
 ver=$(./%{plugin}.sh -V || :)
-test "$(echo "$ver" | awk '{print $NF}')" = %{version}-dev
+test "$(echo "$ver" | awk '{print $NF}')" = %{version}-%{release}
 
 LC_ALL=en_US.utf8 \
 %{__perl} Makefile.PL \
