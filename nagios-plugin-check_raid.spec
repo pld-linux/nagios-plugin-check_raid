@@ -1,7 +1,6 @@
 # TODO
 # - see and adopt: http://gist.github.com/359890
 %define		plugin	check_raid
-%include	/usr/lib/rpm/macros.perl
 Summary:	Nagios plugin to check current server's RAID status
 Name:		nagios-plugin-%{plugin}
 Version:	4.0.10
