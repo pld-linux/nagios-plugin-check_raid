@@ -1,0 +1,41 @@
+From 6dc89fbdb6d230a9e4cad310f50c6e643725885d Mon Sep 17 00:00:00 2001
+From: Sven Strickroth <email@cs-ware.de>
+Date: Sat, 7 Jan 2023 13:39:56 +0100
+Subject: [PATCH] Add support for new arcconf output format
+
+Signed-off-by: Sven Strickroth <email@cs-ware.de>
+---
+ .../Plugin/CheckRaid/Plugins/arcconf.pm       |    5 +-
+ 5 files changed, 2024 insertions(+), 3 deletions(-)
+
+diff --git a/lib/App/Monitoring/Plugin/CheckRaid/Plugins/arcconf.pm b/lib/App/Monitoring/Plugin/CheckRaid/Plugins/arcconf.pm
+index 7e473ea..9b3b8e6 100644
+--- a/lib/App/Monitoring/Plugin/CheckRaid/Plugins/arcconf.pm
++++ b/lib/App/Monitoring/Plugin/CheckRaid/Plugins/arcconf.pm
+@@ -70,7 +70,7 @@ sub parse_status {
+ 			next;
+ 		}
+ 
+-		if (/^\s+Logical device\s+: (\d+)/) {
++		if (/^\s+Logical [D|d]evice\s+: (\d+)/) {
+ 			$task{device} = $1;
+ 		} elsif (/^\s+Task ID\s+: (\d+)/) {
+ 			$task{id} = $1;
+@@ -259,7 +259,7 @@ sub parse_ctrl_config {
+ 				}
+ 			}
+ 
+-		} elsif ($section eq 'MaxCache 3.0 information') {
++		} elsif ($section eq 'MaxCache 3.0 information' || $section eq 'maxCache 3.0 information') {
+ 			# not parsed yet
+ 		} elsif ($section eq 'Connector information') {
+ 			# not parsed yet
+@@ -464,6 +464,7 @@ sub process_logical_drive_information {
+ 	shift->process_logical_device_information(@_);
+ }
+ 
++# TODO: pr66/arcconf-getconfig.out, issue31/getconfig, issue190/getconfig
+ sub process_maxcache_3_0_information {
+ }
+ 
+
