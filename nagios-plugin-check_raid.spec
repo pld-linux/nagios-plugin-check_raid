@@ -75,8 +75,8 @@ Supports:
 %prep
 %setup -qc
 mv nagios-plugin-check_raid-*/* .
-%patch0 -p1
-%patch1 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 # set version
 %{__sed} -i -e '
